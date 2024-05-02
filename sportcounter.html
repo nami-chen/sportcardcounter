@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>運動卡計數器</title>
+</head>
+<style>
+*{
+    margin:0;
+    padding:0;
+}
+
+.box{
+    width:auto;
+    min-height: 500px;
+    margin:0 auto;
+}
+
+a{
+  color:initial;
+  text-decoration:initial;
+}
+
+header{
+    height: 45px;
+    background-color: #329cff;
+}
+
+#title{
+    color:#fff;
+    line-height:45px;
+    text-align:center;
+}
+
+section{
+    text-align: center;
+}
+
+.beginbtn{
+    display: inline-block;
+    margin:15px 0;
+
+}
+
+.button{
+display: inline-block;
+height:20px;
+min-width: 10px;
+background-color: #329cff;
+font-size:12px;
+font-weight: bold;
+color:#fff;
+line-height: 20px;
+padding:5px;
+cursor:pointer;
+}
+
+.button:active{
+    background-color: #116fc1
+}
+
+.record>h4{
+    font-size:16px;
+    margin:5px 0;
+
+}
+
+.record h4:nth-child(3)::after{
+    content: ' ';
+    white-space: pre; /*確保内容保留換行符 */
+    display: block; 
+    line-height: 20px;
+}
+
+.record>h3{
+    font-size:26px;
+    margin:5px 0;
+}
+
+.count{
+    font-size:40px;
+    color:#1a3ef2;
+}
+
+.countweek{
+    font-size:15px;
+    color:#545454;
+}
+
+.countweek::after{
+    content: ' ';
+    white-space: pre; /*確保内容保留換行符 */
+    display: block; 
+    line-height: 20px;
+}
+
+.counter{
+margin:15px 5px;
+}
+
+footer{
+    text-align: center;
+    line-height: 80px;
+}
+
+.gray{
+    background-color: #adadad !important;
+    pointer-events:none !important;
+}
+
+.hidden{
+    display: none !important;
+}
+
+</style>
+<body>
+    <div class="box">
+        <header>
+           <h2 id="title">Sport Card Counter</h2>
+        </header>
+        <section>
+            <!-- <div class="beginning"> -->
+                <a href="begin.html" class="button beginbtn">輸入初始資料以開始記錄</a>
+                
+            <!-- </div> -->
+            <hr>
+            <div class="record">
+                <h4 class="info">您的運動卡已從YYYY-MM-DD啟用</h4>
+                <h4 class="info">已使用XX次</h4>
+                <h4 class="info">將在YYYY-MM-DD時過期</h4>
+                
+
+                <h3>尚有<psan class="count">X</psan>次可用</h3>
+                <h3>尚有<span class="count">X</span>天效期</h3>
+                <span class="countweek">(約X週)</span>
+                <br>
+                <div class="button counter">歸還一次</div>
+                <div class="button counter">使用一次</div>
+                <!-- <input type="button" class="counter" value="歸還一次" > -->
+                <!-- <input type="button" class="counter" value="使用一次"> -->
+                <br>
+                <!-- <input type="button" value="保存"> -->
+                <div class="button save">保存</div>
+
+            </div>
+        </section>
+        <footer>
+            <!-- <input type="button" value="清除所有資料"> -->
+            <div class="button clean">清除所有資料</div>
+        </footer>
+    </div>
+     <!-- <script src="js/counter.js"></script> -->
+     <script>
+            let urtimes=localStorage.getItem('times')
+            let urdate=localStorage.getItem('date')
+            let beginbtn = document.getElementsByClassName("beginbtn")[0];
+            let counter =  localStorage.getItem("counter");
+            let urdays,EXP
+            let today = new Date()
+            if(counter==null){counter=0};
+
+        // 判斷本地是否已有資料,若有即關閉輸入初始資料的連結
+        // if(localStorage.getItem('days') && localStorage.getItem('date')){
+        if(urtimes && urdate){
+           beginbtn.classList.add("gray");}
+        else {
+            document.getElementsByClassName("record")[0].classList.add("hidden");
+            document.getElementsByClassName("clean")[0].classList.add("hidden");
+        }
+        //    for(var i=0;i<beginbtn.length;i++){
+        //     beginbtn[i].classList.add("gray");
+        //    }
+
+        // SET好要計算的數值
+        urdate = new Date(urdate);
+        urtimes = parseInt(urtimes);
+        if(urtimes==25){urdays=180;}
+        else {urdays=30;}
+
+        // 計算運動卡的過期時間
+        EXP=new Date(urdate); //EXP也要創建一個Date獨立不影響Urdate的值
+        EXP.setDate(EXP.getDate()+urdays);
+
+
+        // 轉換成需求的日期格式
+        function formatDate(changeDate){
+            var year=changeDate.getFullYear();
+            var month=changeDate.getMonth() + 1;
+            var day=changeDate.getDate();
+            // console.log(year+"-"+month+"-"+day);
+            return year+"-"+month+"-"+day
+        }
+
+   
+        //計算運動卡尚餘有效天數
+        function EXPday(exp,TODAY,URDAYS){
+            let day = Math.ceil((exp-TODAY)/1000);
+            day = (parseInt(day/(60*60*24)))+1 //今天也要算一天所以+1
+            if (day > URDAYS){
+                return URDAYS;
+            }
+            else{ 
+                return day;
+            }
+            
+        }
+
+        console.log(today)
+
+        //點擊事件計算使用次數
+        let sum=0;
+        document.getElementsByClassName("counter")[0].addEventListener("click",function(){
+            if(counter>0){
+            counter--;
+            sum=urtimes-counter;
+            console.log(counter);
+            document.getElementsByClassName("count")[0].innerText = sum;
+            }
+        })
+        document.getElementsByClassName("counter")[1].addEventListener("click",function(){
+            if(counter<urtimes){
+            counter++;
+            console.log(counter);
+            sum=urtimes-counter;
+            document.getElementsByClassName("count")[0].innerText = sum;
+            }    
+        })
+        //點擊保存至本地
+        document.getElementsByClassName("save")[0].addEventListener("click",function(){
+            if(counter==10){
+                if(confirm("您確定要使用完此張運動卡的次數嗎?")){
+                    localStorage.setItem("counter",counter);
+                    location.reload();
+                }
+            }
+            else{
+            localStorage.setItem("counter",counter);
+            location.reload();
+            }
+        })
+
+        document.getElementsByClassName("clean")[0].addEventListener("click",function(){
+            if (confirm("你確定要清除全部的資料嗎?")){
+            localStorage.clear();
+            location.reload();
+            }
+        })
+
+        //次數用完或過期就關閉修改功能
+        if(localStorage.getItem("counter")==10 || EXPday(EXP,today)<=0){
+            document.getElementsByClassName("counter")[0].classList.add("gray");
+            document.getElementsByClassName("counter")[1].classList.add("gray");
+            document.getElementsByClassName("save")[0].classList.add("gray");
+
+        }
+
+
+        // 將得到的變數寫回html
+        // var urinfo = document.getElementById("info1");
+        document.getElementsByClassName("info")[0].innerText = "您的運動卡已從 "+ formatDate(urdate) +" 啟用";
+        document.getElementsByClassName("info")[1].innerText = "已使用"+counter+"次";
+        document.getElementsByClassName("info")[2].innerText = "將在 "+formatDate(EXP)+" 時過期";
+
+        document.getElementsByClassName("count")[0].innerText = urtimes-counter
+        document.getElementsByClassName("count")[1].innerText = EXPday(EXP,today,urdays)
+        document.getElementsByClassName("countweek")[0].innerText = "(約"+Math.ceil(EXPday(EXP,today)/7)+"週)"
+        
+        
+     </script>
+</body>
+</html>

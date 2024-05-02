@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>輸入頁面</title>
+</head>
+<style>
+    *{
+        margin:0;
+        padding:0;
+    }
+    
+    .box{
+        /* border:solid 5px red; */
+        width:auto;
+        min-height: 500px;
+        margin:0 auto;
+    }
+    
+    a{
+      color:initial;
+      text-decoration:initial;
+    }
+    
+    header{
+        height: 45px;
+        background-color: #329cff;
+        position:relative;
+    }
+    
+    a{
+        color:#fff;
+        /* font-size: 15px; */
+        display: inline-bolck;
+        /* border:solid 10px black; */
+        position:absolute;
+        left:15px;
+        top:50%;
+        transform:translateY(-50%);
+    }
+
+    #title{
+        color:#fff;
+        line-height:45px;
+        text-align:center;
+    }
+    
+    section{
+        text-align:center;
+    }
+
+    section h3,h4,input{
+    margin:20px 0;
+    }
+    hr{
+        width: 70%;
+        margin:0 auto;
+        border:solid 1px #8ecaff;
+    }
+
+    .button{
+    display: inline-block;
+    height:20px;
+    min-width: 10px;
+    background-color: #329cff;
+    font-size:12px;
+    font-weight: bold;
+    color:#fff;
+    line-height: 20px;
+    padding:5px;
+    cursor: pointer;
+}
+
+.button:active{
+    background-color: #116fc1
+}
+
+    </style>
+    <body>
+        <div class="box">
+            <header>
+                <a href="sportcounter.html">上一頁</a>
+               <h2 id="title">Sport Card Counter</h2>
+            </header>
+            <section>
+                <h3>輸入初始資訊以開始記錄運動卡</h3>
+                <hr>
+                <h3>請輸入您運動卡的購買次數:
+                   <select size="1" id="yourselect">
+                    <option value="10">10次(30天)</option>
+                    <option value="25" selected>25次(180天)</option>
+                   </select> 
+                </h3>
+                <h3>請輸入運動卡的啟用日期:<input type="date" id="yourdate">天</h3>
+                <!-- <input type="submit" value="提交"> -->
+                <div class="button">提交</div>
+            </section>
+        </div>
+        <script>
+            // 取得資料
+            // let days;
+            let urselect = document.getElementById("yourselect")
+            let urdate = document.getElementById("yourdate")
+            let submitbtn = document.querySelector(".button")
+            let today = new Date()
+            // // 判斷下拉選單
+            // if(urselect.value==="twentyFive") {days="a"}
+            // else {days=10}
+            // 點下儲存資料,跳轉回主頁
+
+            console.log(urdate);
+            submitbtn.onclick = function(){
+            console.log(urselect.value,urdate.value)
+            localStorage.setItem("times",urselect.value)
+            localStorage.setItem("date",urdate.value)
+            window.location.href="sportcounter.html"
+        }
+        </script>
+    </body>
+</html>
