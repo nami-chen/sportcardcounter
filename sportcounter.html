@@ -220,21 +220,21 @@
             if (counter > 0) {
                 counter--;
                 sum = urtimes - counter;
-                console.log(counter);
+                console.log(counter,urtimes);
                 document.getElementsByClassName("count")[0].innerText = sum;
             }
         })
         document.getElementsByClassName("counter")[1].addEventListener("click", function () {
             if (counter < urtimes) {
                 counter++;
-                console.log(counter);
+                console.log(counter,urtimes);
                 sum = urtimes - counter;
                 document.getElementsByClassName("count")[0].innerText = sum;
             }
         })
         //點擊保存至本地
         document.getElementsByClassName("save")[0].addEventListener("click", function () {
-            if (counter == 10) {
+            if (counter = urtimes) {
                 if (confirm("您確定要使用完此張運動卡的次數嗎?")) {
                     localStorage.setItem("counter", counter);
                     location.reload();
@@ -256,7 +256,7 @@
         })
 
         //次數用完或過期就關閉修改功能
-        if (localStorage.getItem("counter") == 10 || EXPday(EXP, today) <= 0) {
+        if (localStorage.getItem("counter") >= urtimes || EXPday(EXP, today) <= 0) {
             document.getElementsByClassName("counter")[0].classList.add("gray");
             document.getElementsByClassName("counter")[1].classList.add("gray");
             document.getElementsByClassName("save")[0].classList.add("gray");
