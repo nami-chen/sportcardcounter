@@ -234,7 +234,7 @@
         })
         //點擊保存至本地
         document.getElementsByClassName("save")[0].addEventListener("click", function () {
-            if (counter = urtimes) {
+            if (counter >= urtimes) {
                 if (confirm("您確定要使用完此張運動卡的次數嗎?")) {
                     localStorage.setItem("counter", counter);
                     location.reload();
