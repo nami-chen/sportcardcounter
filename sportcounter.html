@@ -10,6 +10,7 @@
     * {
         margin: 0;
         padding: 0;
+        /* border:red 2px solid; */
     }
 
     .box {
@@ -98,6 +99,24 @@
         line-height: 20px;
     }
 
+    .tablebox{
+        display: flex;
+        justify-content: center;
+        margin:20px;
+    }
+
+    table{
+        
+        border-collapse: collapse;
+    }
+
+    td{
+        padding:10px;
+        border:#c6c6c6 1px solid;
+    }
+
+
+
     .counter {
         margin: 15px 5px;
     }
@@ -139,6 +158,7 @@
                 <h3>尚有<span class="count">X</span>天效期</h3>
                 <span class="countweek">(約X週)</span>
                 <br>
+
                 <div class="button counter">歸還一次</div>
                 <div class="button counter">使用一次</div>
                 <!-- <input type="button" class="counter" value="歸還一次" > -->
@@ -146,8 +166,17 @@
                 <br>
                 <!-- <input type="button" value="保存"> -->
                 <div class="button save">保存</div>
-
             </div>
+                            
+            <div class="tablebox">
+                <table id="datatable" class="urtable">
+                    <tr>
+                        <td style="background-color: #96ceff;">使用次數</td>
+                        <td style="background-color: #96ceff;">使用日期</td>
+                    </tr>
+                </table>
+            </div>
+
         </section>
         <footer>
             <!-- <input type="button" value="清除所有資料"> -->
@@ -161,8 +190,22 @@
         let beginbtn = document.getElementsByClassName("beginbtn")[0];
         let counter = localStorage.getItem("counter");
         let urlastdate = localStorage.getItem("lastdate")
-        let urdays, EXP
+        let urdays , EXP , useddatas;
         let today = new Date()
+        let jsonString = localStorage.getItem('LocalUseddatas');
+
+        //若有localstage中有LocalUseddatas使用資料就轉成物件,若沒有就建立新物件
+        if (jsonString) {
+            useddatas = JSON.parse(jsonString);
+            
+        }
+        else{
+            useddatas = {udate:[]};
+            document.getElementsByClassName("urtable")[0].classList.add("hidden");
+        }
+        
+        console.log(useddatas);
+
         if (counter == null) { counter = 0 };
 
         // 判斷本地是否已有資料,若有即關閉輸入初始資料的連結
@@ -209,9 +252,25 @@
             else {
                 return day;
             }
-
         }
 
+        //用useddatas渲染頁面
+        for(var i=0;i<useddatas.udate.length;i++){
+            let otable = document.getElementById('datatable');
+            // otable.innerHTML="";
+            let {count , date} = useddatas.udate[i];
+
+            let row = document.createElement('tr');
+            let countCell = document.createElement('td');
+            countCell.textContent = count;
+            let dateCell = document.createElement('td');
+            dateCell.textContent = date;
+
+            row.appendChild(countCell);
+            row.appendChild(dateCell);
+            otable.appendChild(row);
+        }
+        // console.log(useddatas.udate.length);
         console.log(today)
 
         //點擊事件計算使用次數
@@ -222,6 +281,7 @@
                 sum = urtimes - counter;
                 console.log(counter,urtimes);
                 document.getElementsByClassName("count")[0].innerText = sum;
+                useddatas.udate.pop();
             }
         })
         document.getElementsByClassName("counter")[1].addEventListener("click", function () {
@@ -230,6 +290,8 @@
                 console.log(counter,urtimes);
                 sum = urtimes - counter;
                 document.getElementsByClassName("count")[0].innerText = sum;
+                let newdata ={count: counter,date:formatDate(today)};
+                useddatas.udate.push(newdata);
             }
         })
         //點擊保存至本地
@@ -243,8 +305,10 @@
             else {
                 localStorage.setItem("counter", counter);
                 localStorage.setItem("lastdate",formatDate(today));
+                jsonString = JSON.stringify(useddatas)
+                console.log(jsonString);
+                localStorage.setItem("LocalUseddatas",jsonString);
                 location.reload();
-                
             }
         })
 
